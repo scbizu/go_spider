@@ -32,7 +32,7 @@ func (this *QueueScheduler) Push(requ *request.Request) {
 	this.locker.Lock()
 	var key [md5.Size]byte
 	if this.rm {
-		key = md5.Sum([]byte(requ.GetUrl()))
+		key = md5.Sum([]byte(requ.GetfilterUrl()))
 		if _, ok := this.rmKey[key]; ok {
 			this.locker.Unlock()
 			return
@@ -53,7 +53,7 @@ func (this *QueueScheduler) Poll() *request.Request {
 	}
 	e := this.queue.Front()
 	requ := e.Value.(*request.Request)
-	key := md5.Sum([]byte(requ.GetUrl()))
+	key := md5.Sum([]byte(requ.GetfilterUrl()))
 	this.queue.Remove(e)
 	if !this.rm {
 		delete(this.rmKey, key)
